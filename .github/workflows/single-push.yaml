@@ -1,4 +1,4 @@
-name: Docker
+name: Single docker image push
 
 on:
   repository_dispatch:
