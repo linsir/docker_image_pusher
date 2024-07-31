@@ -66,7 +66,7 @@ jobs:
       run: |
         docker login -u $ALIYUN_REGISTRY_USER -p $ALIYUN_REGISTRY_PASSWORD $ALIYUN_REGISTRY
         # 数据预处理,判断镜像是否重名
-        origin_image=github.event.inputs.image
+        origin_image=${{github.event.inputs.image}}
         # 将@sha256:等字符删除
         image="${origin_image%%@*}"
         echo "image $image"
@@ -83,7 +83,7 @@ jobs:
         echo "image_name: $image_name"
         echo "docker pull $image"
         docker pull $image
-        platform=github.event.inputs.platform
+        platform=${{github.event.inputs.platform}}
         echo "platform: $platform"
         # 如果存在架构信息 将架构信息拼到镜像名称前面
         if [ -z "$platform" ]; then
