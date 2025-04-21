@@ -93,7 +93,7 @@ jobs:
         skopeo --version
         skopeo sync --src docker --dest docker --dest-creds \
         ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
-        ${full_image} ${{ secrets.HWC_REGISTRY }}
+        ${full_image} ${{ secrets.HWC_REGISTRY }}/${{ secrets.HWC_SWR_PROJECT }}/
 
     - name: Authenticate to Huawei Cloud
       uses: huaweicloud/auth-action@v1.0.0
