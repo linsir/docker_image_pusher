@@ -57,8 +57,8 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Docker Setup Buildx
-      uses: docker/setup-buildx-action@v3
+    # - name: Docker Setup Buildx
+    #   uses: docker/setup-buildx-action@v3
 
     - name: 'Set up skopeo'
       uses: warjiang/setup-skopeo@main
@@ -88,13 +88,13 @@ jobs:
         echo "swr repository: $repository"
         # 1panel/kubepi
         echo "SWR_REPOSITORY=$repository" >> $GITHUB_ENV
-        echo "docker pull $full_image"
         new_image="$HWC_REGISTRY/$HWC_SWR_PROJECT/$full_image"
+        echo "From: $full_image \nTo: $new_image"
         skopeo --version
-        skopeo copy --dest-creds \
+        skopeo sync --src docker --dest docker --dest-creds \
         ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
-        docker://${full_image} \
-        docker://${{ secrets.HWC_REGISTRY }}/${new_image}
+        ${full_image} \
+        ${{ secrets.HWC_REGISTRY }}/${new_image}
 
     - name: Authenticate to Huawei Cloud
       uses: huaweicloud/auth-action@v1.0.0
