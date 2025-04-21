@@ -60,6 +60,11 @@ jobs:
     - name: Docker Setup Buildx
       uses: docker/setup-buildx-action@v3
 
+    - name: 'Set up skopeo'
+      uses: warjiang/setup-skopeo@main
+      with:
+        version: latest
+
     - name: Build and push image to HuaweiCloud
       run: |
         docker login -u $HWC_REGISTRY_USER -p $HWC_REGISTRY_PASSWORD $HWC_REGISTRY
@@ -84,22 +89,12 @@ jobs:
         # 1panel/kubepi
         echo "SWR_REPOSITORY=$repository" >> $GITHUB_ENV
         echo "docker pull $full_image"
-        docker pull $full_image
         new_image="$HWC_REGISTRY/$HWC_SWR_PROJECT/$full_image"
-        echo "docker tag $full_image $new_image"
-        docker tag $full_image $new_image
-        echo "docker push $new_image"
-        docker push $new_image
-        echo "开始清理磁盘空间"
-        echo "=============================================================================="
-        df -hT
-        echo "=============================================================================="
-        docker rmi $full_image
-        docker rmi $new_image
-        echo "磁盘空间清理完毕"
-        echo "=============================================================================="
-        df -hT
-        echo "=============================================================================="
+        skopeo --version
+        skopeo copy --dest-creds \
+        ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
+        docker://${full_image} \
+        docker://${{ secrets.HWC_REGISTRY }}/${new_image}
 
     - name: Authenticate to Huawei Cloud
       uses: huaweicloud/auth-action@v1.0.0
