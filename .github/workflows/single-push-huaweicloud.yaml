@@ -89,11 +89,11 @@ jobs:
         # 1panel/kubepi
         echo "SWR_REPOSITORY=$repository" >> $GITHUB_ENV
         new_image="$HWC_REGISTRY/$HWC_SWR_PROJECT/$full_image"
-        echo "From: $full_image \nTo: $new_image"
+        echo "From: $full_image To: $new_image"
         skopeo --version
         skopeo sync --src docker --dest docker --dest-creds \
         ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
-        ${full_image} ${new_image}
+        ${full_image} ${{ secrets.HWC_REGISTRY }}
 
     - name: Authenticate to Huawei Cloud
       uses: huaweicloud/auth-action@v1.0.0
