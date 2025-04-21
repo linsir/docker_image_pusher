@@ -91,10 +91,10 @@ jobs:
         new_image="$HWC_REGISTRY/$HWC_SWR_PROJECT/$full_image"
         echo "From: $full_image To: $new_image"
         skopeo --version
-        echo "skopeo sync --src docker --dest docker ${full_image} ${{ secrets.HWC_REGISTRY }}/${{ secrets.HWC_SWR_PROJECT }}/"
+        echo "skopeo sync --src docker --dest docker ${full_image} ${{ vars.HWC_REGISTRY }}/${{ secrets.HWC_SWR_PROJECT }}/"
         skopeo sync --src docker --dest docker --dest-creds \
         ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
-        ${full_image} ${{ secrets.HWC_REGISTRY }}/${{ secrets.HWC_SWR_PROJECT }}/
+        ${full_image} ${{ vars.HWC_REGISTRY }}/${{ secrets.HWC_SWR_PROJECT }}/
 
     - name: Authenticate to Huawei Cloud
       uses: huaweicloud/auth-action@v1.0.0
