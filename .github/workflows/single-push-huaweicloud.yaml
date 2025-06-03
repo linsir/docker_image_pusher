@@ -90,11 +90,15 @@ jobs:
         echo "SWR_REPOSITORY=$repository" >> $GITHUB_ENV
         new_image="$HWC_REGISTRY/$HWC_SWR_PROJECT/$full_image"
         echo "From: $full_image To: $new_image"
+        # 去掉镜像名和版本号
+        # 例如从swr.cn-north-4.myhuaweicloud.com/test/alertmanager:v0.27.0变成swr.cn-north-4.myhuaweicloud.com/test
+        new_image_path="${new_image%/*}"
+        echo "new_image_path: $new_image_path"
         skopeo --version
-        echo "skopeo sync --src docker --dest docker ${full_image} ${{ vars.HWC_REGISTRY }}/${{ secrets.HWC_SWR_PROJECT }}/"
+        echo "skopeo sync --src docker --dest docker ${full_image} ${new_image_path}/"
         skopeo sync --src docker --dest docker --dest-creds \
         ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
-        ${full_image} ${{ vars.HWC_REGISTRY }}/${{ secrets.HWC_SWR_PROJECT }}/
+        ${full_image} ${new_image_path}/
 
     - name: Authenticate to Huawei Cloud
       uses: huaweicloud/auth-action@v1.0.0
