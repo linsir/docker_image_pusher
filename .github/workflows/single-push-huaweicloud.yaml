@@ -103,9 +103,9 @@ jobs:
     - name: Set HuaweiCloud repo to public
       run: |
 
-        curl -Ls "https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/latest/huaweicloud-cli-linux-amd64.tar.gz" |tar -zx -C /usr/bin/
+        curl -Ls "https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/latest/huaweicloud-cli-linux-amd64.tar.gz" |tar -zx -C .
         # 替换/为$，例如1panel$kubepi
         repository=$(echo "$SWR_REPOSITORY" | sed 's/\//\$/g')
         echo "repository: $repository"
-        hcloud SWR UpdateRepo -cli-access-key=${{ secrets.HWC_AK }} --cli-secret-key=${{ secrets.HWC_SK }} --Content-Type="application/json" --namespace="$HWC_SWR_PROJECT" --repository="$repository" --is_public=true
+        ./hcloud SWR UpdateRepo -cli-access-key=${{ secrets.HWC_AK }} --cli-secret-key=${{ secrets.HWC_SK }} --Content-Type="application/json" --namespace="$HWC_SWR_PROJECT" --repository="$repository" --is_public=true
       
