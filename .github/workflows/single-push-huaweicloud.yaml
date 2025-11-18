@@ -105,7 +105,8 @@ jobs:
 
         curl -Ls "https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/latest/huaweicloud-cli-linux-amd64.tar.gz" |tar -zx -C .
         # 替换/为$，例如1panel$kubepi
-        repository=$(echo "$SWR_REPOSITORY" | sed 's/\//\$/g')
+        repository=$(echo "$SWR_REPOSITORY" | sed 's/\//%24/g')
         echo "repository: $repository"
-        ./hcloud SWR UpdateRepo -cli-access-key=${{ secrets.HWC_AK }} --cli-secret-key=${{ secrets.HWC_SK }} --Content-Type="application/json" --namespace="$HWC_SWR_PROJECT" --repository="$repository" --is_public=true
-      
+        ./hcloud configure set --cli-agree-privacy-statement=true
+        ./hcloud SWR UpdateRepo --cli-region="cn-north-4" --cli-access-key=${{ secrets.HWC_AK }} --cli-secret-key=${{ secrets.HWC_SK }} --Content-Type="application/json" --namespace="$HWC_SWR_PROJECT" --repository="$repository" --is_public=true
+
