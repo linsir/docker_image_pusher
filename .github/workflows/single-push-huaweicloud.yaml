@@ -103,13 +103,13 @@ jobs:
         echo "skopeo copy --override-os linux --override-arch $origin_arch --src docker --dest docker ${full_image} ${new_image}"
         if [ "$origin_arch" = "arm64" ]; then
           echo "origin_arch is arm64, also sync to amd64"
-          skopeo copy --override-os linux --override-arch $origin_arch --src docker --dest docker --dest-creds \
+          skopeo copy --override-os linux --override-arch $origin_arch --dest-creds \
             ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
-            ${full_image} ${new_image}-arm64
+            docker://${full_image} docker://${new_image}-arm64
         fi
-        skopeo copy --override-os linux --override-arch amd64 --src docker --dest docker --dest-creds \
+        skopeo sync --override-os linux --override-arch amd64 --src docker --dest docker --dest-creds \
         ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
-        ${full_image} ${new_image}
+        ${full_image} ${new_image_path}
     - name: Set HuaweiCloud repo to public
       run: |
 
