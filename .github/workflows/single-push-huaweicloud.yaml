@@ -8,6 +8,10 @@ on:
         description: 'image_name:tag'
         required: true
         default: ''
+      arch:
+        description: 'arch(amd64/arm64)'
+        required: true
+        default: 'amd64'
 
 env:
   HWC_REGISTRY: "${{ vars.HWC_REGISTRY }}"
@@ -69,6 +73,7 @@ jobs:
       run: |
         docker login -u $HWC_REGISTRY_USER -p $HWC_REGISTRY_PASSWORD $HWC_REGISTRY
         # 数据预处理,判断镜像是否重名
+        origin_arch=${{github.event.inputs.arch}}
         origin_image=${{github.event.inputs.image}}
         # 将@sha256:等字符删除
         full_image="${origin_image%%@*}"
@@ -95,8 +100,8 @@ jobs:
         new_image_path="${new_image%/*}"
         echo "new_image_path: $new_image_path"
         skopeo --version
-        echo "skopeo sync --src docker --dest docker ${full_image} ${new_image_path}/"
-        skopeo sync --src docker --dest docker --dest-creds \
+        echo "skopeo sync --override-os linux --override-arch $origin_arch --src docker --dest docker ${full_image} ${new_image_path}/"
+        skopeo sync --override-os linux --override-arch $origin_arch --src docker --dest docker --dest-creds \
         ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
         ${full_image} ${new_image_path}/
 
