@@ -24,7 +24,7 @@ env:
 jobs:
 
   build:
-    name: Pull
+    name: sync image to HuaweiCloud
     runs-on: ubuntu-latest
     steps:
     - name: Before freeing up disk space
@@ -47,9 +47,6 @@ jobs:
         # remove-android: 'true'
         # remove-codeql: 'true'
         build-mount-path: '/var/lib/docker/'
-
-    - name: Restart docker
-      run: sudo service docker restart
 
     - name: Free up disk space complete
       run: |
