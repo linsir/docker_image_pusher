@@ -100,17 +100,16 @@ jobs:
         new_image_path="${new_image%/*}"
         echo "new_image_path: $new_image_path"
         skopeo --version
-        echo "skopeo sync --override-os linux --override-arch $origin_arch --src docker --dest docker ${full_image} ${new_image_path}/"
-        skopeo sync --override-os linux --override-arch $origin_arch --src docker --dest docker --dest-creds \
-        ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
-        ${full_image} ${new_image_path}/
+        echo "skopeo copy --override-os linux --override-arch $origin_arch --src docker --dest docker ${full_image} ${new_image}"
         if [ "$origin_arch" = "arm64" ]; then
           echo "origin_arch is arm64, also sync to amd64"
-          skopeo sync --override-os linux --override-arch amd64 --src docker --dest docker --dest-creds \
+          skopeo copy --override-os linux --override-arch $origin_arch --src docker --dest docker --dest-creds \
             ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
-            ${full_image} ${new_image_path}/
+            ${full_image} ${new_image}-arm64
         fi
-
+        skopeo copy --override-os linux --override-arch amd64 --src docker --dest docker --dest-creds \
+        ${{ secrets.HWC_REGISTRY_USER }}:${{ secrets.HWC_REGISTRY_PASSWORD }} \
+        ${full_image} ${new_image}
     - name: Set HuaweiCloud repo to public
       run: |
 
